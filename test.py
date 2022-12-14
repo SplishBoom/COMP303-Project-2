@@ -93,7 +93,11 @@ def colorize_svg_output():
 create_svg_output(10)
 
 from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF, renderPM
+from reportlab.graphics import renderPM
 
-drawing = svg2rlg("index.svg")
-renderPM.drawToFile(drawing, "temp.png", fmt="PNG", dpi=200)
+def draw() :
+    drawing = svg2rlg("index.svg")
+    renderPM.drawToFile(drawing, "temp.png", fmt="PNG", dpi=250)
+
+print("Drawing...")
+draw()
