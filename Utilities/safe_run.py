@@ -1,7 +1,7 @@
 import  os
 import  shutil
 
-from Constants import SAFE_CACHED_FOLDERS, SAFE_PRE_EXISTING_CHECKLIST
+from Constants import SAFE_CACHED_FOLDERS, SAFE_PRE_EXISTING_CHECKLIST, SAFE_UNNECESSARY_FOLDERS
 
 def safeStart() :
 
@@ -23,5 +23,10 @@ def safeStop() :
             for dir in dirs :
                 if dir == "__pycache__" :
                     shutil.rmtree(os.path.join(root, dir))
+
+    # clear SAFE_UNNECESSARY_FOLDERS
+    for folder in SAFE_UNNECESSARY_FOLDERS :
+        folderPath = os.path.join(projectDir, folder)
+        shutil.rmtree(folderPath)
 
     exit()
