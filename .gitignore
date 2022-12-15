@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Otuput Folder
+Data Export/
+Temp/
+
 # Distribution / packaging
 .Python
 build/
