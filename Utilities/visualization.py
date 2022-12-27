@@ -2,15 +2,9 @@ from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 from Constants import connect_pathes, STORE_DATA_OUTPUT_PATH, STORE_TEMP_OUTPUT_PATH, VISUAL_DJIKSTRA_SVG_OUTPUT_PATH, VISUAL_ASTAR_SVG_OUTPUT_PATH, VISUAL_DJIKSTRA_PNG_OUTPUT_PATH, VISUAL_ASTAR_PNG_OUTPUT_PATH
 
-def visualize(number_of_cities:int, algorithm:str, path_to_be_colored:list=[]):
+def visualize(number_of_cities:int, algorithm:str, nodes_to_be_colored:list=[]):
     
-    gen_font_family = "Times New Roman"
-    gen_font_size = 20
-    gen_storke_width = 1
-    gen_scheme_color = "black"
-    gen_fill_color = "white"
-    gen_stroke_style = "fill: rgb(255, 255, 255);"
-    gen_text_style = "white-space: pre;"
+    weights_to_be_colored = list(zip(nodes_to_be_colored, nodes_to_be_colored[1:]))
 
     vertical_inpad = 6
     horizontal_inpad = 6
@@ -46,12 +40,16 @@ def visualize(number_of_cities:int, algorithm:str, path_to_be_colored:list=[]):
                 city_locations.append(current_location)
                 
     svg_city_circles = "    <!-- City Circles -->\n"
-    for current_location in city_locations :
-        svg_city_circles += f"    <ellipse stroke=\"black\" stroke-width=\"1\" cx=\"{current_location[0]}\" cy=\"{current_location[1]}\" rx=\"30\" ry=\"30\" style=\"fill: rgb(255, 255, 255);\"/>\n"
+    for count, current_location in enumerate(city_locations) :
+        current_node_id = count+1
+        if current_node_id in nodes_to_be_colored :
+            svg_city_circles += f"    <ellipse stroke=\"black\" stroke-width=\"1\" cx=\"{current_location[0]}\" cy=\"{current_location[1]}\" rx=\"30\" ry=\"30\" style=\"fill: rgb(255, 255, 255); stroke: rgb(255, 0, 0); stroke-width: 14px;\"/>\n"
+        else :
+            svg_city_circles += f"    <ellipse stroke=\"black\" stroke-width=\"1\" cx=\"{current_location[0]}\" cy=\"{current_location[1]}\" rx=\"30\" ry=\"30\" style=\"fill: rgb(255, 255, 255);\"/>\n"
 
     city_labels = "    <!-- City Labels -->\n"
-    for cityID, current_location in enumerate(city_locations) :
-        city_labels += f"    <text x=\"{current_location[0]}\" y=\"{current_location[1]+horizontal_inpad}\" font-family=\"Times New Roman\" font-size=\"20\" style=\"white-space: pre; text-anchor: middle; dominant-baseline: middle;\">{cityID+1}</text>\n"
+    for count, current_location in enumerate(city_locations) :
+        city_labels += f"    <text x=\"{current_location[0]}\" y=\"{current_location[1]+horizontal_inpad}\" font-family=\"Times New Roman\" font-size=\"20\" style=\"white-space: pre; text-anchor: middle; dominant-baseline: middle;\">{count+1}</text>\n"
 
     svgStart = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
     svgSetting = f"<svg width=\"{canvas_width}\" height=\"{canvas_height}\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">"
@@ -61,19 +59,28 @@ def visualize(number_of_cities:int, algorithm:str, path_to_be_colored:list=[]):
     for i in range(number_of_cities) :
         for j in range(number_of_cities) :
             if i != j and abs(i-j) <= 3:
-                edges += f"    <line x1=\"{city_locations[i][0]}\" y1=\"{city_locations[i][1]}\" x2=\"{city_locations[j][0]}\" y2=\"{city_locations[j][1]}\" stroke=\"black\" stroke-width=\"1\"/>\n"
+                current_path = (i+1, j+1)
+                if current_path in weights_to_be_colored :
+                    edges += f"    <line x1=\"{city_locations[i][0]}\" y1=\"{city_locations[i][1]}\" x2=\"{city_locations[j][0]}\" y2=\"{city_locations[j][1]}\" style=\"stroke: rgb(255, 0, 0); stroke-width: 10px;\"/>\n"
+                else :
+                    edges += f"    <line x1=\"{city_locations[i][0]}\" y1=\"{city_locations[i][1]}\" x2=\"{city_locations[j][0]}\" y2=\"{city_locations[j][1]}\" stroke=\"black\" stroke-width=\"1\"/>\n"
+                
 
     edge_labels = "    <!-- Edge Labels -->\n"
     for i in range(number_of_cities) :
         for j in range(number_of_cities) :
             if i != j and abs(i-j) <= 3:
                 edge_labels += f"    <text x=\"{(city_locations[i][0]+city_locations[j][0])/2}\" y=\"{(city_locations[i][1]+city_locations[j][1])/2+horizontal_inpad}\" font-family=\"Times New Roman\" font-size=\"20\" style=\"white-space: pre; text-anchor: middle; dominant-baseline: middle;\">{i+j+2}</text>\n"
-    
+
     edge_label_circles = "    <!-- Edge Label Circles -->\n"
     for i in range(number_of_cities) :
         for j in range(number_of_cities) :
             if i != j and abs(i-j) <= 3:
-                edge_label_circles += f"    <ellipse stroke=\"black\" stroke-width=\"1\" cx=\"{((city_locations[i][0]+city_locations[j][0])/2)}\" cy=\"{((city_locations[i][1]+city_locations[j][1])/2)}\" rx=\"15\" ry=\"15\" style=\"fill: rgb(255, 255, 255); stroke-dasharray: 2px;\"/>\n"
+                current_path = (i+1, j+1)
+                if current_path in weights_to_be_colored : 
+                    edge_label_circles += f"    <ellipse stroke=\"black\" stroke-width=\"1\" cx=\"{((city_locations[i][0]+city_locations[j][0])/2)}\" cy=\"{((city_locations[i][1]+city_locations[j][1])/2)}\" rx=\"15\" ry=\"15\" style=\"fill: rgb(255, 255, 255); stroke-dasharray: 2px; stroke: rgb(255, 0, 0); stroke-width: 12px;\"/>\n"
+                else :
+                    edge_label_circles += f"    <ellipse stroke=\"black\" stroke-width=\"1\" cx=\"{((city_locations[i][0]+city_locations[j][0])/2)}\" cy=\"{((city_locations[i][1]+city_locations[j][1])/2)}\" rx=\"15\" ry=\"15\" style=\"fill: rgb(255, 255, 255); stroke-dasharray: 2px;\"/>\n"
 
     def create_svg(args) :
         svg = ""
