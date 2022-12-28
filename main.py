@@ -4,9 +4,9 @@ from Algorithms.Dijkstra import dijkstra
 
 if __name__ == "__main__" :
     safeStart()
-    n = 15
-    s = 7
-    d = 2
+    n = 17
+    s = 3
+    d = 16
 
     graph_object = MyGraph(n)
     graph = graph_object.graph
