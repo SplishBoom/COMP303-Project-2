@@ -1,15 +1,18 @@
 from Utilities import safeStart, safeStop, visualize
 from Algorithms.MyGraph import MyGraph
+from Algorithms.Dijkstra import dijkstra
 
 if __name__ == "__main__" :
     safeStart()
-    n = 10
-    path_of_node_identities = [1,2,3,4,5,6,7,8,9]
+    n = 15
+    s = 7
+    d = 2
+
+    graph_object = MyGraph(n)
+    graph = graph_object.graph
+
+    path_of_node_identities, total_cost, edge_count = dijkstra(graph, s, d)
     
     visualize(n, "Djikstra", path_of_node_identities)
-    
-    objct = MyGraph(n)
-    print(objct)
-    print(objct.graph)
 
     safeStop()
