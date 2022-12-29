@@ -11,10 +11,11 @@ Method, that takes an dictionary which includes a directed and weighted graph. T
     path -> list : list of nodes, that are in the shortest path in order
     distance -> int : distance of the shortest path, or number of nodes in the path
     cost -> int : cost of the shortest path, or sum of the weights of the edges in the path
+    number_of_nodes_visited -> int : number of nodes visited
 """
-def dijkstra(graph, start, end):
+def dijkstra(graph, start, end) :
 
-	# initialize distance and cost dictionaries
+    # initialize distance and cost dictionaries
     total_cost = {node: inf for node in graph}
     edge_count = {node: inf for node in graph}
 
@@ -54,36 +55,39 @@ def dijkstra(graph, start, end):
             # calculate new distance
             new_distance = current_distance + weight
 
-            # check if new distance is smaller than old distance
+            # check if new distance is smaller than current distance
             if new_distance < total_cost[neighbour]:
 
-                # update distance and cost dictionaries
+                # update distance and cost
                 total_cost[neighbour] = new_distance
                 edge_count[neighbour] = edge_count[current_node] + 1
 
-                # update previous node dictionary
+                # update previous node
                 previous[neighbour] = current_node
 
-                # push neighbour in queue
+                # push node to queue
                 heapq.heappush(queue, (new_distance, neighbour))
 
-    # initialize path list
+    # initialize path
     path = []
 
     # initialize current node
-    current = end
+    current_node = end
 
-    # loop while current node is not None
-    while current is not None:
+    # loop while current node is not start node
+    while current_node != start:
 
         # add current node to path
-        path.append(current)
+        path.append(current_node)
 
         # update current node
-        current = previous[current]
+        current_node = previous[current_node]
+
+    # add start node to path
+    path.append(start)
 
     # reverse path
     path.reverse()
-
-    # return path, distance, cost
-    return path, total_cost[end], edge_count[end]
+    
+    # return path, distance, cost and number of nodes visited
+    return path, total_cost[end], edge_count[end], len(visited)
