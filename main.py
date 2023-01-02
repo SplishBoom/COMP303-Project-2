@@ -171,7 +171,7 @@ def plot_data(data:list, will_plot_data:bool, is_continuously_generated) -> str:
     plt.savefig(SAVE_ITER_PLOT_PATH)
     plt.close()
 
-    return "Data plotted successfully."
+    return [SAVE_TIME_PLOT_PATH, SAVE_ITER_PLOT_PATH]
     
 
 def main(number_of_cities:int, is_continuously_generated:bool, start_city:int, destination_city:int, will_save_data:bool, will_plot_data:bool, will_visualize_data:bool) -> None:
