@@ -1,0 +1,4 @@
+keyboard==0.13.5
+matplotlib==3.6.2
+reportlab==3.6.12
+svglib==1.4.1
