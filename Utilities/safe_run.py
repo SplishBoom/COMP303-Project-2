@@ -1,7 +1,8 @@
 import  os
 import  shutil
+import json
 
-from Constants import SAFE_CACHED_FOLDERS, SAFE_PRE_EXISTING_CHECKLIST, SAFE_UNNECESSARY_FOLDERS
+from Constants import SAFE_CACHED_FOLDERS, SAFE_PRE_EXISTING_CHECKLIST, SAFE_UNNECESSARY_FOLDERS, RUN_CONFIG_FILE_PATH
 
 def safe_start() :
 
@@ -12,6 +13,23 @@ def safe_start() :
             else :
                 with open(path, "w") as f :
                     f.write("")
+
+    # Check if 
+    try :
+        with open (RUN_CONFIG_FILE_PATH, "r") as infile:
+            configFile = json.load(infile)
+        dummy = configFile["number_of_cities"], configFile["is_continuously_generated"], configFile["start_city"], configFile["destination_city"], configFile["will_save_data"], configFile["will_plot_data"]
+    except :
+        fixData = {
+            "number_of_cities" : 10,
+            "is_continuously_generated" : False,
+            "start_city" : 5,
+            "destination_city" : 10,
+            "will_save_data" : True,
+            "will_plot_data" : True
+        }
+        with open(RUN_CONFIG_FILE_PATH, "w") as f:
+            json.dump(fixData, f, sort_keys=True, indent=4)
 
 def safe_stop() :
 

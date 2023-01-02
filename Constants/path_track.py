@@ -3,6 +3,8 @@ import os
 def connect_pathes(*pathes):
     return os.path.join(*pathes)
 
+RUN_CONFIG_FILE_PATH = connect_pathes("Temp", "run_config.json")
+
 SAFE_CACHED_FOLDERS = ["Algorithms", "Constants", "Utilities"]
 SAFE_UNNECESSARY_FOLDERS = ["Temp"]
 SAFE_PRE_EXISTING_CHECKLIST = ["Data Export", "Temp"]
