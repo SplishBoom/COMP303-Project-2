@@ -7,8 +7,7 @@ This project is a simple implementation of the shortest path problem. To analyze
 * 2. A* Algorithm
 
 # Usage
-> usage: 
-* main.py [-h] [-n NUMBER_OF_CITIES] [-c CONTINUOUSLY_GENERATE] [-st START_CITY] [-dt DESTINATION_CITY] [-s SAVE_TO_FILE] [-p PLOT_RESULTS]
+`main.py [-h] [-n NUMBER_OF_CITIES] [-c CONTINUOUSLY_GENERATE] [-st START_CITY] [-dt DESTINATION_CITY] [-s SAVE_TO_FILE] [-p PLOT_RESULTS]`
 
 * This script is used to compare the performance of the two well-known shortest path finder algorithms.
 
@@ -34,7 +33,7 @@ optional arguments:
 install requirements for python packages, then run one of the following python scripts:
 
 Note: It is sufficient to have an anaconda environment to run though for that use following.
-* conda create -n msse ; pip install -r requirements.txt ; conda activate msse
+`conda create -n msse ; pip install -r requirements.txt ; conda activate msse`
 
 1. main.py - runs the test suite and prints the results.
 
