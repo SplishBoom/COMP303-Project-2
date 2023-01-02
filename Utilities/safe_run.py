@@ -3,7 +3,7 @@ import  shutil
 
 from Constants import SAFE_CACHED_FOLDERS, SAFE_PRE_EXISTING_CHECKLIST, SAFE_UNNECESSARY_FOLDERS
 
-def safeStart() :
+def safe_start() :
 
     for path in SAFE_PRE_EXISTING_CHECKLIST :
         if not os.path.exists(path) :
@@ -13,7 +13,7 @@ def safeStart() :
                 with open(path, "w") as f :
                     f.write("")
 
-def safeStop() :
+def safe_stop() :
 
     projectDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

@@ -2,7 +2,7 @@ from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 from Constants import connect_pathes, STORE_DATA_OUTPUT_PATH, STORE_TEMP_OUTPUT_PATH, VISUAL_DJIKSTRA_SVG_OUTPUT_PATH, VISUAL_ASTAR_SVG_OUTPUT_PATH, VISUAL_DJIKSTRA_PNG_OUTPUT_PATH, VISUAL_ASTAR_PNG_OUTPUT_PATH
 
-def visualize(number_of_cities:int, algorithm:str, nodes_to_be_colored:list=[]):
+def visualize(algorithm:str, number_of_cities:int, nodes_to_be_colored:list=[]):
     
     weights_to_be_colored = list(zip(nodes_to_be_colored, nodes_to_be_colored[1:]))
 

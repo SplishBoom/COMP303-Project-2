@@ -3,7 +3,7 @@ import os
 def connect_pathes(*pathes):
     return os.path.join(*pathes)
 
-SAFE_CACHED_FOLDERS = ["App", "Constants", "Utilities"]
+SAFE_CACHED_FOLDERS = ["Algorithms", "Constants", "Utilities"]
 SAFE_UNNECESSARY_FOLDERS = ["Temp"]
 SAFE_PRE_EXISTING_CHECKLIST = ["Data Export", "Temp"]
 

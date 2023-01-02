@@ -1,101 +1,115 @@
-from math import inf
-import heapq
+from heapq import heappush, heappop
 
-"""
-Method, that takes an dictionary which includes a directed and weighted graph. Than it finds the shortest path by using A* algorithm.
-@params:
-    graph -> dict : dictionary which includes a directed and weighted graph in the format {node: {neighbour: weight, neighbour: weight, ...}, ...}
-    start -> str : start node
-    end -> str : end node
-@returns:
-    path -> list : list of nodes, that are in the shortest path in order
-    distance -> int : distance of the shortest path, or number of nodes in the path
-    cost -> int : cost of the shortest path, or sum of the weights of the edges in the path
-    number_of_nodes_visited -> int : number of nodes visited
-"""
-def a_star(graph, start, end) :
+class AStar:
+    """
+    Pseduo Code of A* Algorithm:
+    1. Initialize a priority queue Q and a distances array D.
+    2. Insert the starting vertex into Q and set its distance in D to 0.
+    3. While Q is not empty:
+        4. Extract the vertex v with the minimum distance + heuristic cost from Q.
+        5. For each neighbor w of v:
+            6. Calculate the distance from the starting vertex to w through v.
+            7. If this distance is less than the current distance in D for w, update the distance in D for w.
+            8. Calculate the heuristic cost from w to the end vertex.
+            9. If w is not in Q, add it to Q with a priority equal to the distance + heuristic cost.
+    10. The distances array D now contains the shortest distances from the starting vertex to all other vertices.
+    11. By backtracking from the end vertex, we can find the shortest path.
+    12. Return the shortest path and its cost.
+    """
 
-    # initialize distance and cost dictionaries
-    total_cost = {node: inf for node in graph}
-    edge_count = {node: inf for node in graph}
+    def __init__(self) -> None:
+        """
+        Constructor of AStar class.
+        """
+        self.iterations = {
+            
+        }
 
-    # initialize start node
-    total_cost[start] = 0
-    edge_count[start] = 0
+    def _a_star(self, graph:dict, start:int, end:int) -> tuple:
+        """
+        Method, that takes an dictionary which includes a directed and weighted graph. Than it finds the shortest path by using A* algorithm. With heuristic function of abs(i-j)
+        @params:
+            graph -> dict : dictionary which includes a directed and weighted graph in the format {node: {neighbour: weight, neighbour: weight, ...}, ...}.
+            start -> int : start node.
+            end -> int : end node.
+        @returns:
+            algorithm_type -> str : name of the algorithm.
+            path -> list : list of nodes, that are in the shortest path in order.
+            cost -> int : cost of the shortest path.
+            distance -> int : distance of the shortest path.
+        """
 
-    # initialize priority queue
-    queue = [(0, start)]
+        heuristic = lambda i, j: min(abs(i-j), abs(i-j))
+        # Manhattan distance -> abs(i-j)
+        # Euclidean distance -> (i-j)**2
+        # Chebyshev distance -> max(abs(i-j), abs(i-j))
+        # Minkowski distance -> (abs(i-j)**p)**(1/p)
+        # Diagonal distance  -> min(abs(i-j), abs(i-j))
+        # Dijkstra           -> 0
 
-    # initialize previous node dictionary
-    previous = {node: None for node in graph}
+        # Initialize a priority queue Q and a distances array D.
+        Q = []
+        D = {}
 
-    # initialize visited nodes set
-    visited = set()
+        # Insert the starting vertex into Q and set its distance in D to 0.
+        heappush(Q, (0, start))
+        D[start] = 0
 
-    # loop while queue is not empty
-    while queue:
+        # While Q is not empty:
+        while Q:
+            # Extract the vertex v with the minimum distance + heuristic cost from Q.
+            _, v = heappop(Q)
 
-        # pop node with smallest distance from queue
-        current_distance, current_node = heapq.heappop(queue)
+            # For each neighbor w of v:
+            for w in graph[v]:
+                # Calculate the distance from the starting vertex to w through v.
+                d = D[v] + graph[v][w]
 
-        # check if node is visited
-        if current_node in visited:
-            continue
+                # If this distance is less than the current distance in D for w, update the distance in D for w.
+                if w not in D or d < D[w]:
+                    D[w] = d
 
-        # add node to visited set
-        visited.add(current_node)
+                    # Calculate the heuristic cost from w to the end vertex.
+                    h = heuristic(w, end)
 
-        # check if node is end node
-        if current_node == end:
-            break
+                    # If w is not in Q, add it to Q with a priority equal to the distance + heuristic cost.
+                    heappush(Q, (d+h, w))
 
-        # loop through neighbours
-        for neighbour, weight in graph[current_node].items():
+        # Get the distance from the D array mapping.
+        distance = D[end]
 
-            # calculate new distance
-            new_distance = current_distance + weight
+        # The distances array D now contains the shortest distances from the starting vertex to all other vertices.
+        # By backtracking from the end vertex, we can find the shortest path.
+        path = []
+        cost = D[end]
+        while end != start:
+            for v in graph:
+                if end in graph[v] and D[end] == D[v] + graph[v][end]:
+                    path.append(end)
+                    end = v
+                    break
+        path.append(start)
+        path.reverse()
 
-            # check if new distance is smaller than old distance
-            if new_distance < total_cost[neighbour]:
+        # Return values.
+        return (
+            "AStar", 
+            path, 
+            cost, 
+            distance
+        )
 
-                # update distance and cost dictionaries
-                total_cost[neighbour] = new_distance
-                edge_count[neighbour] = edge_count[current_node] + 1
-
-                # update previous node dictionary
-                previous[neighbour] = current_node
-
-                # calculate heuristic function - Manhattan distance
-                heuristic = abs(int(neighbour) - int(end))
-
-                # Other heuristic functions:
-                # heuristic = 0 # Dijkstra's algorithm
-                # heuristic = abs(int(neighbour) - int(end)) # Manhattan distance
-                # heuristic = (int(neighbour) - int(end)) ** 2 # Euclidean distance
-
-                # calculate total cost
-                total = new_distance + heuristic
-
-                # push node to queue
-                heapq.heappush(queue, (total, neighbour))
-
-    # initialize path list
-    path = []
-
-    # loop through previous nodes
-    while previous[end] is not None:
-
-        # add node to path
-        path.append(end)
-
-        # update end node
-        end = previous[end]
-
-    # add start node to path
-    path.append(start)
-
-    # reverse path
-    path.reverse()
-
-    # return path, distance, cost and number of nodes visited
-    return path, total_cost[path[-1]], edge_count[path[-1]], len(visited)
+    def solve(self, graph:dict, start:int, end:int) -> tuple:
+        """
+        Method, that runs the A* algorithm. @_a_star().
+        @params:
+            graph -> dict : dictionary which includes a directed and weighted graph in the format {node: {neighbour: weight, neighbour: weight, ...}, ...}.
+            start -> int : start node.
+            end -> int : end node.
+        @returns:
+            algorithm_type -> str : name of the algorithm.
+            path -> list : list of nodes, that are in the shortest path in order.
+            cost -> int : cost of the shortest path.
+            distance -> int : distance of the shortest path.
+        """
+        return self._a_star(graph, start, end)

@@ -5,11 +5,11 @@ class MyGraph :
 
         self.n = number_of_nodes
         
-        self.initialize_graph()
+        self.generate_graph()
 
     def __str__(self):
         
-        string = "--- The MyGraph Object ---\n"
+        string = "\n--- The MyGraph Object ---"
 
         odd_numbers = [i for i in range(1, self.n+1) if i % 2 == 1]
         even_numbers = [i for i in range(1, self.n+1) if i % 2 == 0]
@@ -19,7 +19,7 @@ class MyGraph :
         
         return string + "\n" + string1 + "\n" + string2
 
-    def initialize_graph(self) :
+    def generate_graph(self) :
 
         self._create_graph()
 
