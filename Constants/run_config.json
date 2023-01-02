@@ -1,0 +1,8 @@
+{
+    "destination_city": 8,
+    "is_continuously_generated": true,
+    "number_of_cities": 100,
+    "start_city": 1,
+    "will_plot_data": true,
+    "will_save_data": true
+}

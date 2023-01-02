@@ -22,7 +22,17 @@ class AStar:
         Constructor of AStar class.
         """
         self.iterations = {
-            
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "D": 0,
+            "E": 0,
+            "F": 0,
+            "G": 0,
+            "H": 0,
+            "I": 0,
+            "J": 0,
+            "K": 0,
         }
 
     def _a_star(self, graph:dict, start:int, end:int) -> tuple:
@@ -36,10 +46,11 @@ class AStar:
             algorithm_type -> str : name of the algorithm.
             path -> list : list of nodes, that are in the shortest path in order.
             cost -> int : cost of the shortest path.
-            distance -> int : distance of the shortest path.
+            iterations -> dict : dictionary which includes the number of iterations of each step of the algorithm.
         """
 
         heuristic = lambda i, j: min(abs(i-j), abs(i-j))
+        self.iterations["A"] += 1
         # Manhattan distance -> abs(i-j)
         # Euclidean distance -> (i-j)**2
         # Chebyshev distance -> max(abs(i-j), abs(i-j))
@@ -48,25 +59,30 @@ class AStar:
         # Dijkstra           -> 0
 
         # Initialize a priority queue Q and a distances array D.
+        self.iterations["B"] += 1
         Q = []
         D = {}
 
         # Insert the starting vertex into Q and set its distance in D to 0.
+        self.iterations["C"] += 1
         heappush(Q, (0, start))
         D[start] = 0
 
         # While Q is not empty:
         while Q:
+            self.iterations["D"] += 1
             # Extract the vertex v with the minimum distance + heuristic cost from Q.
             _, v = heappop(Q)
 
             # For each neighbor w of v:
             for w in graph[v]:
+                self.iterations["E"] += 1
                 # Calculate the distance from the starting vertex to w through v.
                 d = D[v] + graph[v][w]
 
                 # If this distance is less than the current distance in D for w, update the distance in D for w.
                 if w not in D or d < D[w]:
+                    self.iterations["F"] += 1
                     D[w] = d
 
                     # Calculate the heuristic cost from w to the end vertex.
@@ -75,19 +91,21 @@ class AStar:
                     # If w is not in Q, add it to Q with a priority equal to the distance + heuristic cost.
                     heappush(Q, (d+h, w))
 
-        # Get the distance from the D array mapping.
-        distance = D[end]
-
         # The distances array D now contains the shortest distances from the starting vertex to all other vertices.
         # By backtracking from the end vertex, we can find the shortest path.
+        self.iterations["G"] += 1
         path = []
         cost = D[end]
         while end != start:
+            self.iterations["H"] += 1
             for v in graph:
+                self.iterations["I"] += 1
                 if end in graph[v] and D[end] == D[v] + graph[v][end]:
+                    self.iterations["J"] += 1
                     path.append(end)
                     end = v
                     break
+        self.iterations["K"] += 1
         path.append(start)
         path.reverse()
 
@@ -95,21 +113,16 @@ class AStar:
         return (
             "AStar", 
             path, 
-            cost, 
-            distance
+            cost,
+            self.iterations
         )
 
     def solve(self, graph:dict, start:int, end:int) -> tuple:
         """
         Method, that runs the A* algorithm. @_a_star().
         @params:
-            graph -> dict : dictionary which includes a directed and weighted graph in the format {node: {neighbour: weight, neighbour: weight, ...}, ...}.
-            start -> int : start node.
-            end -> int : end node.
+            see @_a_star().
         @returns:
-            algorithm_type -> str : name of the algorithm.
-            path -> list : list of nodes, that are in the shortest path in order.
-            cost -> int : cost of the shortest path.
-            distance -> int : distance of the shortest path.
+            see @_a_star().
         """
         return self._a_star(graph, start, end)

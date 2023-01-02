@@ -1,6 +1,6 @@
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
-from Constants import connect_pathes, STORE_DATA_OUTPUT_PATH, STORE_TEMP_OUTPUT_PATH, VISUAL_DJIKSTRA_SVG_OUTPUT_PATH, VISUAL_ASTAR_SVG_OUTPUT_PATH, VISUAL_DJIKSTRA_PNG_OUTPUT_PATH, VISUAL_ASTAR_PNG_OUTPUT_PATH
+from Constants import connect_pathes, STORE_DATA_OUTPUT_PATH, STORE_TEMP_OUTPUT_PATH, VISUAL_DIJKSTRA_SVG_OUTPUT_PATH, VISUAL_ASTAR_SVG_OUTPUT_PATH, VISUAL_DIJKSTRA_PNG_OUTPUT_PATH, VISUAL_ASTAR_PNG_OUTPUT_PATH
 
 def visualize(algorithm:str, number_of_cities:int, nodes_to_be_colored:list=[]):
     
@@ -92,8 +92,8 @@ def visualize(algorithm:str, number_of_cities:int, nodes_to_be_colored:list=[]):
 
     svg = create_svg([svgStart, svgSetting, edges, svg_city_circles, city_labels, edge_label_circles, edge_labels, svgEnd])
 
-    if algorithm == "Djikstra" :
-        with open(VISUAL_DJIKSTRA_SVG_OUTPUT_PATH, "w") as f :
+    if algorithm == "Dijkstra" :
+        with open(VISUAL_DIJKSTRA_SVG_OUTPUT_PATH, "w") as f :
             f.write(svg)
     elif algorithm == "AStar" :
         with open(VISUAL_ASTAR_SVG_OUTPUT_PATH, "w") as f :
@@ -102,16 +102,20 @@ def visualize(algorithm:str, number_of_cities:int, nodes_to_be_colored:list=[]):
         raise ValueError("Invalid Algorithm")
         exit()
 
-    save_svg_as_png(algorithm)
+    output = save_svg_as_png(algorithm)
+
+    return output
 
 def save_svg_as_png(algorithm:str) :
 
-    if algorithm == "Djikstra" :
-        drawing = svg2rlg(VISUAL_DJIKSTRA_SVG_OUTPUT_PATH)
-        renderPM.drawToFile(drawing, VISUAL_DJIKSTRA_PNG_OUTPUT_PATH, fmt="PNG", dpi=250) # add "-> None" return annotation to draw method in library to suspect "unreachable mark after this line"
+    if algorithm == "Dijkstra" :
+        drawing = svg2rlg(VISUAL_DIJKSTRA_SVG_OUTPUT_PATH)
+        renderPM.drawToFile(drawing, VISUAL_DIJKSTRA_PNG_OUTPUT_PATH, fmt="PNG", dpi=250) # add "-> None" return annotation to draw method in library to suspect "unreachable mark after this line"
+        return VISUAL_DIJKSTRA_PNG_OUTPUT_PATH
     elif algorithm == "AStar" :
         drawing = svg2rlg(VISUAL_ASTAR_SVG_OUTPUT_PATH)
         renderPM.drawToFile(drawing, VISUAL_ASTAR_PNG_OUTPUT_PATH, fmt="PNG", dpi=250)
+        return VISUAL_ASTAR_PNG_OUTPUT_PATH
     else :
         raise ValueError("Invalid Algorithm")
         exit()
