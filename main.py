@@ -5,7 +5,6 @@ from Constants import RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITER_PLOT_
 import argparse
 import json
 import keyboard
-import random
 from matplotlib import pyplot as plt
 
 def execute(number_of_cities:int, start_city:int, destination_city:int) -> dict:
