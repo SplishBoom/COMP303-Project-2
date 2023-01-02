@@ -100,11 +100,10 @@ def simulate(number_of_cities:int, is_continuously_generated:bool, start_city:in
     if not is_continuously_generated:
         data.append(execute(number_of_cities, start_city, destination_city))
     else:
-        iterable = [i for i in range(10, number_of_cities + 1, 100)]
+        iterable = [i for i in range(1, number_of_cities + 1, 1)]
         for number_of_cities in progressBar(iterable, prefix = 'Simulating:', suffix = 'Complete', length = 50):
-            random_start, random_destination = random.randint(1, (number_of_cities - 1)//2), random.randint((number_of_cities - 1)//2, number_of_cities)
             try :
-                data.append(execute(number_of_cities, random_start, random_destination))
+                data.append(execute(number_of_cities, 1, number_of_cities))
             except :
                 print(f"** Error occured while generating test case {number_of_cities}. Program will skip this amount.")
             if keyboard.is_pressed("ESC") and keyboard.is_pressed("C") and keyboard.is_pressed("L") and keyboard.is_pressed("S") :
@@ -132,7 +131,7 @@ def visualize_data(result:list, number_of_cities:int, will_visualize_data:bool) 
 
     return fb1, fb2
 
-def plot_data(data:list, will_plot_data:bool) -> str:
+def plot_data(data:list, will_plot_data:bool, is_continuously_generated) -> str:
     """
     Method, that takes the dict results of executions. And creates two plots about Dijkstra VS AStar. In case of aXb, where a is y axis, and b is x axis.
     First, it plots : time X number of cities.
@@ -145,7 +144,7 @@ def plot_data(data:list, will_plot_data:bool) -> str:
         feedback            -   Required    :   The feedback of the plotting. (str)
     """
 
-    if not will_plot_data:
+    if not will_plot_data or not is_continuously_generated:
         return "No data plotting done."
 
     # timeXcities
@@ -195,7 +194,7 @@ def main(number_of_cities:int, is_continuously_generated:bool, start_city:int, d
     fb = visualize_data(data[-1], number_of_cities, will_visualize_data)
     print("*** Visualization Output. ->", fb)
     
-    fb = plot_data(data, will_plot_data)
+    fb = plot_data(data, will_plot_data, is_continuously_generated)
     print("*** Plotting Output. ->", fb)
 
 if __name__ == "__main__":
