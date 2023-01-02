@@ -21,10 +21,10 @@ def safe_start() :
         dummy = configFile["number_of_cities"], configFile["is_continuously_generated"], configFile["start_city"], configFile["destination_city"], configFile["will_save_data"], configFile["will_plot_data"]
     except :
         fixData = {
-            "number_of_cities" : 10,
+            "number_of_cities" : 1000,
             "is_continuously_generated" : False,
-            "start_city" : 5,
-            "destination_city" : 10,
+            "start_city" : 1,
+            "destination_city" : 1000,
             "will_save_data" : True,
             "will_plot_data" : True
         }
