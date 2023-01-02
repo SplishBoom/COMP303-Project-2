@@ -49,12 +49,12 @@ class AStar:
             iterations -> dict : dictionary which includes the number of iterations of each step of the algorithm.
         """
 
-        heuristic = lambda i, j: min(abs(i-j), abs(i-j))
+        heuristic = lambda i, j: abs(i-j)
         self.iterations["A"] += 1
         # Manhattan distance -> abs(i-j)
         # Euclidean distance -> (i-j)**2
         # Chebyshev distance -> max(abs(i-j), abs(i-j))
-        # Minkowski distance -> (abs(i-j)**p)**(1/p)
+        # Minkowski distance -> (abs(i-j)**2)**(1/2)
         # Diagonal distance  -> min(abs(i-j), abs(i-j))
         # Dijkstra           -> 0
 

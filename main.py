@@ -100,7 +100,7 @@ def simulate(number_of_cities:int, is_continuously_generated:bool, start_city:in
     if not is_continuously_generated:
         data.append(execute(number_of_cities, start_city, destination_city))
     else:
-        iterable = [i for i in range(10, number_of_cities + 1, 10)]
+        iterable = [i for i in range(10, number_of_cities + 1, 100)]
         for number_of_cities in progressBar(iterable, prefix = 'Simulating:', suffix = 'Complete', length = 50):
             random_start, random_destination = random.randint(1, (number_of_cities - 1)//2), random.randint((number_of_cities - 1)//2, number_of_cities)
             try :
@@ -238,7 +238,7 @@ if __name__ == "__main__":
                 "will_plot_data": will_plot_data
             }, outfile)
 
-    will_visualize_data = (number_of_cities<=100)
+    will_visualize_data = (number_of_cities<=20)
 
     main(int(number_of_cities), bool(is_continuously_generated), int(start_city), int(destination_city), bool(will_save_data), bool(will_plot_data), bool(will_visualize_data))
 
