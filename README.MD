@@ -33,7 +33,9 @@ optional arguments:
 install requirements for python packages, then run one of the following python scripts:
 
 Note: It is sufficient to have an anaconda environment to run though for that use following.
-`conda create -n msse ; pip install -r requirements.txt ; conda activate msse`
+`conda create -n msse`
+`pip install -r requirements.txt`
+`conda activate msse`
 
 1. main.py - runs the test suite and prints the results.
 
