@@ -103,10 +103,10 @@ class Dijkstra:
 
     def solve(self, graph:dict, start:int, end:int) -> tuple:
         """
-        Method, that runs the Dijkstra algorithm. @dijkstra().
+        Method, that runs the Dijkstra algorithm. @_dijkstra().
         @params:
-            @see @dijkstra().
+            @see @_dijkstra().
         @returns:
-            @see @dijkstra().
+            @see @_dijkstra().
         """
         return self._dijkstra(graph, start, end)
