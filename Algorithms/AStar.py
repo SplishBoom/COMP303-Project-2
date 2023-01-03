@@ -117,6 +117,72 @@ class AStar:
             self.iterations
         )
 
+    def _a_start_without_heap(self, graph:dict, start:int, end:int) -> tuple:
+        """
+        Method, that takes an dictionary which includes a directed and weighted graph. Than it finds the shortest path by using A* algorithm. With heuristic function of abs(i-j)
+        This method is without using heap.
+        @params:
+            graph -> dict : dictionary which includes a directed and weighted graph in the format {node: {neighbour: weight, neighbour: weight, ...}, ...}.
+            start -> int : start node.
+            end -> int : end node.
+        @returns:
+            algorithm_type -> str : name of the algorithm.
+            path -> list : list of nodes, that are in the shortest path in order.
+            cost -> int : cost of the shortest path.
+            iterations -> dict : dictionary which includes the number of iterations of each step of the algorithm.
+        """
+
+        heuristic = lambda i, j: abs(i-j)
+
+        # Initialize a priority queue Q and a distances array D.
+        Q = []
+        D = {}
+
+        # Insert the starting vertex into Q and set its distance in D to 0.
+        Q.append((0, start))
+        D[start] = 0
+
+        # While Q is not empty:
+        while Q:
+            # Extract the vertex v with the minimum distance + heuristic cost from Q.
+            _, v = Q.pop(0)
+
+            # For each neighbor w of v:
+            for w in graph[v]:
+                # Calculate the distance from the starting vertex to w through v.
+                d = D[v] + graph[v][w]
+
+                # If this distance is less than the current distance in D for w, update the distance in D for w.
+                if w not in D or d < D[w]:
+                    D[w] = d
+
+                    # Calculate the heuristic cost from w to the end vertex.
+                    h = heuristic(w, end)
+
+                    # If w is not in Q, add it to Q with a priority equal to the distance + heuristic cost.
+                    Q.append((d+h, w))
+
+        # The distances array D now contains the shortest distances from the starting vertex to all other vertices.
+        # By backtracking from the end vertex, we can find the shortest path.
+        path = []
+        cost = D[end]
+        while end != start:
+            for v in graph:
+                if end in graph[v] and D[end] == D[v] + graph[v][end]:
+                    path.append(end)
+                    end = v
+                    break
+        path.append(start)
+        path.reverse()
+
+        # Return values.
+        return (
+            "AStar",
+            path,
+            cost,
+            self.iterations
+        )
+
     def solve(self, graph:dict, start:int, end:int) -> tuple:
         """
         Method, that runs the A* algorithm. @_a_star().
@@ -125,4 +191,4 @@ class AStar:
         @returns:
             see @_a_star().
         """
-        return self._a_star(graph, start, end)
+        return self._a_start_without_heap(graph, start, end)
