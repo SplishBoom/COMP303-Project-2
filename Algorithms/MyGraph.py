@@ -5,8 +5,6 @@ class MyGraph :
 
         self.n = number_of_nodes
         
-        self.generate_graph()
-
     def __str__(self):
         
         string = "\n--- The MyGraph Object ---"
