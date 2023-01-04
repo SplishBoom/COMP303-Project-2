@@ -1,11 +1,24 @@
 
 class MyGraph :
+    """
+    Class, that creates a dictionaryt graph for the specified format from handout.
+    """
 
-    def __init__(self, number_of_nodes) :
+    def __init__(self, number_of_nodes) -> None:
+        """
+        Constructor for the MyGraph class.
+        @params:
+            number_of_nodes: int
+        """
 
         self.n = number_of_nodes
         
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the graph.
+        @returns:
+            string: str
+        """
         
         string = "\n--- The MyGraph Object ---"
 
@@ -17,14 +30,25 @@ class MyGraph :
         
         return string + "\n" + string1 + "\n" + string2
 
-    def generate_graph(self) :
+    def generate_graph(self) -> None:
+        """
+        Generates a graph for the specified format from handout.
+        """
 
         self._create_graph()
 
         while not self._validate_graph() :
             self._create_graph()
                 
-    def _create_graph(self) :
+    def _create_graph(self) -> None:
+        """
+        Creates a graph for the specified format from handout.
+        @format :
+        {
+            node1:{neighbor1:cost11, neighbor2:cost12, ...},
+            node2:{neighbor1:cost21, neighbor2:cost22, ...},
+        }
+        """
 
         graph = {}
 
@@ -36,8 +60,12 @@ class MyGraph :
         
         self.graph = graph
 
-    def _validate_graph(self) :
-
+    def _validate_graph(self) -> bool:
+        """
+        Validates the graph for the specified format from handout.
+        @returns:
+            bool: bool
+        """
         # check that the graph has the correct number of nodes
         if len(self.graph) != self.n:
             return False

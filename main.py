@@ -1,7 +1,7 @@
 from Utilities import safe_start, safe_stop, visualize
 from Algorithms import AStar, Dijkstra, MyGraph
 import timeit
-from Constants import RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITER_PLOT_PATH
+from Constants import RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITERATIONS_PLOT_PATH
 import argparse
 import json
 import keyboard
@@ -34,7 +34,7 @@ def execute(number_of_cities:int, start_city:int, destination_city:int) -> dict:
     end_of_a_star = timeit.default_timer()
     a_star_time = (round((end_of_a_star - start_of_a_star) * 10 ** 6, 3))
 
-    state = (dijkstra_result[1] == a_star_result[1])
+    state = (dijkstra_result[0] == a_star_result[0])
 
     return {
         "number_of_cities" : number_of_cities,
@@ -42,15 +42,19 @@ def execute(number_of_cities:int, start_city:int, destination_city:int) -> dict:
         "destination_city" : destination_city,
         "simulate_correct" : state,
 
-        "dijkstra_time" : dijkstra_time,
-        "dijkstra_path" : dijkstra_result[0],
-        "dijkstra_cost" : dijkstra_result[1],
-        "dijkstra_iterations" : dijkstra_result[2],
+        "DIJKSTRA" : {
+            "time" : dijkstra_time,
+            "path" : dijkstra_result[0],
+            "cost" : dijkstra_result[1],
+            "iterations" : dijkstra_result[2],
+        },
 
-        "a_star_time" : a_star_time,
-        "a_star_path" : a_star_result[0],
-        "a_star_cost" : a_star_result[1],
-        "a_star_iterations" : a_star_result[2],
+        "ASTAR" : {
+            "time" : a_star_time,
+            "path" : a_star_result[0],
+            "cost" : a_star_result[1],
+            "iterations" : a_star_result[2],
+        },
     }
 
 def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r") -> None:
@@ -111,26 +115,27 @@ def simulate(number_of_cities:int, is_continuously_generated:bool, start_city:in
 
     return data
 
-def visualize_data(result:list, number_of_cities:int, will_visualize_data:bool) -> str:
+def visualize_data(result:list, will_visualize_data:bool) -> str:
     """
     Method, visualizes the given data.
     @params :
-        result                  -   Required    :   The result of the simulation. (list)
-        number_of_cities        -   Required    :   The number of cities. (int)
+        result                  -   Required    :   The result of the simulation. (dict)
         will_visualize_data     -   Required    :   If this flag is set, the script will visualize the data. (bool)
     @return :
-        feedback                -   Required    :   The feedback of the visualization. (2*str)
+        None
     """
 
-    if not will_visualize_data:
-        return "No data visualization done."
+    if (not will_visualize_data) or (not result["simulate_correct"]):
+        return
     
-    fb1 = visualize("Dijkstra", number_of_cities, result["dijkstra_path"])
-    fb2 = visualize("AStar", number_of_cities, result["a_star_path"])
+    dijkstra_path = result["DIJKSTRA"]["path"]
+    astar_path = result["ASTAR"]["path"]
 
-    return fb1, fb2
+    number_of_cities = result["number_of_cities"]
 
-def plot_data(data:list, will_plot_data:bool, is_continuously_generated) -> str:
+    visualize(number_of_cities, dijkstra_path)
+
+def plot_data(data:list, will_plot_data:bool) -> None:
     """
     Method, that takes the dict results of executions. And creates two plots about Dijkstra VS AStar. In case of aXb, where a is y axis, and b is x axis.
     First, it plots : time X number of cities.
@@ -140,17 +145,16 @@ def plot_data(data:list, will_plot_data:bool, is_continuously_generated) -> str:
         data                -   Required    :   The result of the simulation. (list)
         will_plot_data      -   Required    :   If this flag is set, the script will plot the data. (bool)
     @return :
-        feedback            -   Required    :   The feedback of the plotting. (str)
+        None
     """
 
-    if not will_plot_data or not is_continuously_generated:
-        return "No data plotting done."
+    if not will_plot_data:
+        return
 
     # timeXcities
-
     plt.figure(figsize=(10, 10))
-    plt.plot([i["number_of_cities"] for i in data], [i["dijkstra_time"] for i in data], label="Dijkstra")
-    plt.plot([i["number_of_cities"] for i in data], [i["a_star_time"] for i in data], label="AStar")
+    plt.plot([i["number_of_cities"] for i in data], [i["DIJKSTRA"]["time"] for i in data], label="Dijkstra")
+    plt.plot([i["number_of_cities"] for i in data], [i["ASTAR"]["time"] for i in data], label="AStar")
     plt.xlabel("Number of Cities")
     plt.ylabel("Time (s)")
     plt.title("Time X Number of Cities")
@@ -161,20 +165,18 @@ def plot_data(data:list, will_plot_data:bool, is_continuously_generated) -> str:
 
     # iterationsXcities
     plt.figure(figsize=(10, 10))
-    plt.plot([i["number_of_cities"] for i in data], [max(i["dijkstra_iterations"].values()) for i in data], label="Dijkstra")
-    plt.plot([i["number_of_cities"] for i in data], [max(i["a_star_iterations"].values()) for i in data], label="AStar")
+    plt.plot([i["number_of_cities"] for i in data], [max(i["DIJKSTRA"]["iterations"].values()) for i in data], label="Dijkstra")
+    plt.plot([i["number_of_cities"] for i in data], [max(i["ASTAR"]["iterations"].values()) for i in data], label="AStar")
     plt.xlabel("Number of Cities")
     plt.ylabel("Iterations")
     plt.title("Iterations X Number of Cities")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(SAVE_ITER_PLOT_PATH)
+    plt.savefig(SAVE_ITERATIONS_PLOT_PATH)
     plt.close()
 
-    return [SAVE_TIME_PLOT_PATH, SAVE_ITER_PLOT_PATH]
-    
 
-def main(number_of_cities:int, is_continuously_generated:bool, start_city:int, destination_city:int, will_save_data:bool, will_plot_data:bool, will_visualize_data:bool) -> None:
+def main(number_of_cities:int, is_continuously_generated:bool, start_city:int, destination_city:int, will_visualize_data:bool, will_plot_data:bool) -> None:
     """
     Main function of the script, IT drives through thw the program acording to the given parameters.
     @params :
@@ -182,30 +184,39 @@ def main(number_of_cities:int, is_continuously_generated:bool, start_city:int, d
         is_continuously_generated   -   Required    :   If this flag is set, the script will generate test cases continuously from 1 to N. (bool)
         start_city                  -   Required    :   The start city. (int)
         destination_city            -   Required    :   The destination city. (int)
-        will_save_data              -   Required    :   If this flag is set, the script will save the results in a file. (bool)
+        will_visualize_data         -   Required    :   If this flag is set, the script will visualize the results. (bool)
         will_plot_data              -   Required    :   If this flag is set, the script will plot the results. (bool)
     @return : 
         None
     """
 
-    data = simulate(number_of_cities, is_continuously_generated, start_city, destination_city)
+    simulation_results = simulate(number_of_cities, is_continuously_generated, start_city, destination_city)
 
-    fb = visualize_data(data[-1], number_of_cities, will_visualize_data)
-    print("*** Visualization Output. ->", fb)
-    
-    fb = plot_data(data, will_plot_data, is_continuously_generated)
-    print("*** Plotting Output. ->", fb)
+    plot_data(simulation_results, will_plot_data)
 
-if __name__ == "__main__":
-    
-    safe_start()
+    visualize_data(simulation_results[-1], will_visualize_data)
+
+
+def get_arguments() -> tuple:
+    """
+    Method, that takes arguments and lines up the program.
+    @returns:
+    (
+        number_of_cities : int -> The number of cities.
+        is_continuously_generated : bool -> If this flag is set, the script will generate test cases continuously from 1 to N.
+        start_city : int -> The start city.
+        destination_city : int -> The destination city.
+        will_visualize_data : bool -> If this flag is set, the script will visualize the data.
+        will_plot_data : bool -> If this flag is set, the script will plot the data.
+    )
+    """
 
     parser = argparse.ArgumentParser(description="This script is used to compare the performance of the two well-known shortest path finder algorithms.")
     parser.add_argument("-n", "--number-of-cities", type=int, help="The number of cities in the graph.", required=False)
     parser.add_argument("-c", "--continuously-generate", type=int, help="If this flag is set, the script will generate test cases continuously from 1 to N.", required=False, default=False)
     parser.add_argument("-st", "--start-city", type=int, help="The start city.", required=False)
     parser.add_argument("-dt", "--destination-city", type=int, help="The destination city.", required=False)
-    parser.add_argument("-s", "--save-to-file", type=int, help="If this flag is set, the results will be saved to a file.", required=False, default=False)
+    parser.add_argument("-v", "--visualize-results", type=int, help="If this flag is set, the results will be visualized.", required=False, default=False)
     parser.add_argument("-p", "--plot-results", type=int, help="If this flag is set, the results will be plotted.", required=False, default=False)
     args = parser.parse_args()
 
@@ -213,7 +224,7 @@ if __name__ == "__main__":
     is_continuously_generated = args.continuously_generate
     start_city = args.start_city
     destination_city = args.destination_city
-    will_save_data = args.save_to_file
+    will_visualize_data = args.visualize_results
     will_plot_data = args.plot_results
 
     if number_of_cities is None:
@@ -223,21 +234,35 @@ if __name__ == "__main__":
         is_continuously_generated = configFile["is_continuously_generated"]
         start_city = configFile["start_city"]
         destination_city = configFile["destination_city"]
-        will_save_data = configFile["will_save_data"]
+        will_visualize_data = configFile["will_visualize_data"]
         will_plot_data = configFile["will_plot_data"]
     else:
-        with open(RUN_CONFIG_FILE_PATH, "w") as outfile:
-            json.dump({
-                "number_of_cities": number_of_cities,
-                "is_continuously_generated": is_continuously_generated,
-                "start_city": start_city,
-                "destination_city": destination_city,
-                "will_save_data": will_save_data,
-                "will_plot_data": will_plot_data
-            }, outfile)
+        fixData = {
+            "number_of_cities" : number_of_cities,
+            "is_continuously_generated" : is_continuously_generated,
+            "start_city" : start_city,
+            "destination_city" : destination_city,
+            "will_visualize_data" : will_visualize_data,
+            "will_plot_data" : will_plot_data
+        }
+        with open(RUN_CONFIG_FILE_PATH, "w") as f:
+            json.dump(fixData, f, sort_keys=True, indent=4)
 
-    will_visualize_data = (number_of_cities<=20)
+    return (
+        int(number_of_cities),
+        bool(is_continuously_generated),
+        int(start_city),
+        int(destination_city),
+        bool(will_visualize_data),
+        bool(will_plot_data)
+    )
 
-    main(int(number_of_cities), bool(is_continuously_generated), int(start_city), int(destination_city), bool(will_save_data), bool(will_plot_data), bool(will_visualize_data))
+if __name__ == "__main__":
+    
+    safe_start()
+
+    args = get_arguments()
+
+    main(*args)
 
     safe_stop()

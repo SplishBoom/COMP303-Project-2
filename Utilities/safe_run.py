@@ -1,10 +1,15 @@
 import  os
-import  shutil
 import json
 
-from Constants import SAFE_CACHED_FOLDERS, SAFE_PRE_EXISTING_CHECKLIST, SAFE_UNNECESSARY_FOLDERS, RUN_CONFIG_FILE_PATH
+from Constants import (
+    SAFE_PRE_EXISTING_CHECKLIST,
+    RUN_CONFIG_FILE_PATH,
+)
 
 def safe_start() :
+    """
+    Makes sure that the program is safe to start.
+    """
 
     for path in SAFE_PRE_EXISTING_CHECKLIST :
         if not os.path.exists(path) :
@@ -18,33 +23,24 @@ def safe_start() :
     try :
         with open (RUN_CONFIG_FILE_PATH, "r") as infile:
             configFile = json.load(infile)
-        dummy = configFile["number_of_cities"], configFile["is_continuously_generated"], configFile["start_city"], configFile["destination_city"], configFile["will_save_data"], configFile["will_plot_data"]
+        dummy = configFile["number_of_cities"], configFile["is_continuously_generated"], configFile["start_city"], configFile["destination_city"], configFile["will_visualize_data"], configFile["will_plot_data"]
     except :
         fixData = {
-            "number_of_cities" : 1000,
+            "number_of_cities" : 20,
             "is_continuously_generated" : False,
             "start_city" : 1,
-            "destination_city" : 1000,
-            "will_save_data" : True,
+            "destination_city" : 20,
+            "will_visualize_data" : True,
             "will_plot_data" : True
         }
         with open(RUN_CONFIG_FILE_PATH, "w") as f:
             json.dump(fixData, f, sort_keys=True, indent=4)
 
 def safe_stop() :
+    """
+    Makes sure that the program is safe to end.
+    """
 
-    projectDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    for folder in SAFE_CACHED_FOLDERS :
-        folderPath = os.path.join(projectDir, folder)
-        for root, dirs, files in os.walk(folderPath):
-            for dir in dirs :
-                if dir == "__pycache__" :
-                    shutil.rmtree(os.path.join(root, dir))
-
-    # clear SAFE_UNNECESSARY_FOLDERS
-    for folder in SAFE_UNNECESSARY_FOLDERS :
-        folderPath = os.path.join(projectDir, folder)
-        shutil.rmtree(folderPath)
+    # CACHE CLEANUP, TEMP DELETIONS ARE REMOVED. THIS FUNCTION IS DUMMY. BUT CAN BE USED IF NEEDED.
 
     exit()
