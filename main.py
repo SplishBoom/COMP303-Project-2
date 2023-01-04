@@ -104,7 +104,7 @@ def simulate(number_of_cities:int, is_continuously_generated:bool, start_city:in
         data.append(execute(number_of_cities, start_city, destination_city))
     else:
         # assign, from 1 to number_of_cities, to iterable. İncrease by multiplying 2.
-        iterable = range(1, number_of_cities + 1, 2)
+        iterable = range(1, number_of_cities + 1, 1)
         for number_of_cities in progressBar(iterable, prefix = 'Simulating:', suffix = 'Complete', length = 50):
             
             data.append(execute(number_of_cities, 1, number_of_cities))
