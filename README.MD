@@ -11,6 +11,8 @@ This project is a simple implementation of the shortest path problem. To analyze
 
 * This script is used to compare the performance of the two well-known shortest path finder algorithms.
 
+> See, the last image in below as an example please.
+
 ``` bash
 usage: main.py [-h] [-n NUMBER_OF_CITIES] [-c CONTINUOUSLY_GENERATE] [-st START_CITY] [-dt DESTINATION_CITY] [-v VISUALIZE_RESULTS] [-p PLOT_RESULTS]
 
@@ -52,3 +54,4 @@ optional arguments:
 ![Time_Plot](Assets/Plot_Time.png)
 ![Iterations_Plot](Assets/Plot_Iterations.png)
 ![Cost_Plot](Assets/Plot_Cost.png)
+![Terminal_Execution](Assets/Terminal_Execution.png)
