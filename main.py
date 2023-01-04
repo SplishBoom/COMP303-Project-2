@@ -43,14 +43,14 @@ def execute(number_of_cities:int, start_city:int, destination_city:int) -> dict:
         "simulate_correct" : state,
 
         "dijkstra_time" : dijkstra_time,
-        "dijkstra_path" : dijkstra_result[1],
-        "dijkstra_cost" : dijkstra_result[2],
-        "dijkstra_iterations" : dijkstra_result[3],
+        "dijkstra_path" : dijkstra_result[0],
+        "dijkstra_cost" : dijkstra_result[1],
+        "dijkstra_iterations" : dijkstra_result[2],
 
         "a_star_time" : a_star_time,
-        "a_star_path" : a_star_result[1],
-        "a_star_cost" : a_star_result[2],
-        "a_star_iterations" : a_star_result[3],
+        "a_star_path" : a_star_result[0],
+        "a_star_cost" : a_star_result[1],
+        "a_star_iterations" : a_star_result[2],
     }
 
 def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r") -> None:
