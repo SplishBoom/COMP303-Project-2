@@ -1,10 +1,14 @@
-import  os
-import json
+"""
+This script is used to make sure that the program is safe to start and end.
+"""
+
 
 from Constants import (
     SAFE_PRE_EXISTING_CHECKLIST,
     RUN_CONFIG_FILE_PATH,
 )
+import json
+import  os
 
 def safe_start() :
     """

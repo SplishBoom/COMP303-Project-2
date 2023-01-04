@@ -1,10 +1,12 @@
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPM
-
+"""
+This script is used for visualizing the given graph and its path in PNG and SVG formats.
+"""
 from Constants import (
     VISUAL_SVG_OUTPUT_PATH,
     VISUAL_PNG_OUTPUT_PATH,
 )
+from reportlab.graphics import renderPM
+from svglib.svglib import svg2rlg
 
 def visualize(number_of_cities:int, nodes_to_be_colored:list=[]) -> None :
     """

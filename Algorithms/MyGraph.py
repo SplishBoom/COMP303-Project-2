@@ -1,3 +1,6 @@
+"""
+This module contains the MyGraph class, that creates a dictionaryt graph for the specified format from handout.
+"""
 
 class MyGraph :
     """

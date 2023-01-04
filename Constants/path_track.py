@@ -1,7 +1,10 @@
+"""
+This file contains all the pathes used in the project. Kind of deployment config.
+"""
+
 import os
 
-def connect_pathes(*pathes):
-    return os.path.join(*pathes)
+def connect_pathes(*pathes): return os.path.join(*pathes)
 
 SAFE_PRE_EXISTING_CHECKLIST = ["Data Export"]
 

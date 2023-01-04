@@ -1,3 +1,18 @@
+"""
+@Script, that implements Dijkstra's Algorithm using Min Heap.
+
+@Student_1:     "Emir Cetin Memis"    |   @Student_2:     "Emircan Yaprak"        |   @Student_3:     "Tuana Selen Ozhazday"
+@StudentID_1:   041901027             |   @StudentID_2:   041901009               |   @StudentID_3:   041901024
+@Contact_1:     "memise@mef.edu.tr"   |   @Contact_2:     "yaprakem@mef.edu.tr"   |   @Contact_3:     "ozhazdayt@mef.edu.tr"
+
+@Set&Rights: "MEF University"
+@Instructor: "Prof. Dr. Muhittin Gokmen"
+@Course:     "Analysis of Algorithms"
+@Req:        "Project 2"
+
+@Since: 4/1/2023
+"""
+
 from heapq import heappush, heappop
 
 class Dijkstra:
