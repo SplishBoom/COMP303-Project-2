@@ -49,6 +49,7 @@ optional arguments:
 
 ![Example PNG Format Graph](Assets/Graph_PNG.png)
 ![Example SVG Format Graph](Assets/Graph_SVG.png)
+<img src="Assets/Graph_SVG.png">
 ![Time_Plot](Assets/Plot_Time.png)
 ![Iterations_Plot](Assets/Plot_Iterations.png)
 ![Cost_Plot](Assets/Plot_Cost.png)
