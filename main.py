@@ -13,10 +13,11 @@
 @Since: 4/1/2023
 """
 
-from    Constants   import  RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITERATIONS_PLOT_PATH, SAVE_COST_PLOT_PATH
+from    Constants   import  RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITERATIONS_PLOT_PATH, SAVE_COST_PLOT_PATH, VISUAL_PNG_OUTPUT_PATH, VISUAL_SVG_OUTPUT_PATH
 from    Utilities   import  safe_start, safe_stop, visualize
 from    Algorithms  import  AStar, Dijkstra, MyGraph
 from    matplotlib  import  pyplot as plt
+import  colorama
 import  argparse
 import  keyboard
 import  timeit
@@ -218,12 +219,28 @@ def main(number_of_cities:int, is_continuously_generated:bool, start_city:int, d
         None
     """
 
+    print(f"{colorama.Fore.RED}\n***{colorama.Fore.LIGHTGREEN_EX} Application Starting.{colorama.Fore.RESET}")
+
+    print(f"{colorama.Fore.RED}\n***{colorama.Fore.LIGHTGREEN_EX} Parameters Via Config -> {colorama.Fore.LIGHTBLUE_EX}\n\t@number_of_cities : {number_of_cities}\n\t@is_continuously_generated : {is_continuously_generated}\n\t@start_city : {start_city}\n\t@destination_city : {destination_city}\n\t@will_visualize_data : {will_visualize_data}\n\t@will_plot_data : {will_plot_data}{colorama.Fore.RESET}")
+
+    print(f"{colorama.Fore.RED}\n***{colorama.Fore.LIGHTGREEN_EX} Simulations are starting.{colorama.Fore.LIGHTBLUE_EX} \t\"This may take a while according to number_of_nodes you choosed\"{colorama.Fore.LIGHTYELLOW_EX}")
     simulation_results = simulate(number_of_cities, is_continuously_generated, start_city, destination_city)
+    print(f"{colorama.Fore.RED}***{colorama.Fore.LIGHTGREEN_EX} Simulation completed with {len(simulation_results)} number of results.{colorama.Fore.RESET}")
 
     plot_data(simulation_results, will_plot_data)
-
+    if will_plot_data:
+        print(f"{colorama.Fore.RED}\n***{colorama.Fore.LIGHTGREEN_EX} Plots are created check output folders -> \"{SAVE_TIME_PLOT_PATH}\", \"{SAVE_ITERATIONS_PLOT_PATH}\", \"{SAVE_COST_PLOT_PATH}\".{colorama.Fore.RESET}")
+    else:
+        print(f"{colorama.Fore.LIGHTGREEN_EX}\n***{colorama.Fore.RED} Plots are not created. Via False parameter.{colorama.Fore.RESET}")
+        
     visualize_data(simulation_results[-1], will_visualize_data)
-
+    print(f"{colorama.Fore.RED}\n***{colorama.Fore.LIGHTGREEN_EX} Graph is initialized with N:{number_of_cities}, S:{start_city}, D:{destination_city}.{colorama.Fore.RESET}")
+    if will_visualize_data:
+        print(f"{colorama.Fore.RED}***{colorama.Fore.LIGHTGREEN_EX} Graph is created check output folders -> \"{VISUAL_PNG_OUTPUT_PATH}\", \"{VISUAL_SVG_OUTPUT_PATH}\".{colorama.Fore.RESET}")
+    else:
+        print(f"{colorama.Fore.LIGHTGREEN_EX}***{colorama.Fore.RED} Graph is not created. Via False parameter.{colorama.Fore.RESET}")
+    
+    print(f"{colorama.Fore.RED}\n***{colorama.Fore.LIGHTGREEN_EX} Application executed successfully.{colorama.Fore.RESET}")
 
 def get_arguments() -> tuple:
     """
