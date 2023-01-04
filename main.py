@@ -1,11 +1,12 @@
 from Utilities import safe_start, safe_stop, visualize
 from Algorithms import AStar, Dijkstra, MyGraph
 import timeit
-from Constants import RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITERATIONS_PLOT_PATH
+from Constants import RUN_CONFIG_FILE_PATH, SAVE_TIME_PLOT_PATH, SAVE_ITERATIONS_PLOT_PATH, SAVE_COST_PLOT_PATH
 import argparse
 import json
 import keyboard
 from matplotlib import pyplot as plt
+import math
 
 def execute(number_of_cities:int, start_city:int, destination_city:int) -> dict:
     """
@@ -54,7 +55,7 @@ def execute(number_of_cities:int, start_city:int, destination_city:int) -> dict:
             "path" : a_star_result[0],
             "cost" : a_star_result[1],
             "iterations" : a_star_result[2],
-        },
+        }
     }
 
 def progressBar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r") -> None:
@@ -97,18 +98,17 @@ def simulate(number_of_cities:int, is_continuously_generated:bool, start_city:in
         data                        -   Required    :   The result of the simulation. (list)
     """
 
-    print("\n*** Simulation started.")
     data = []
 
     if not is_continuously_generated:
         data.append(execute(number_of_cities, start_city, destination_city))
     else:
-        iterable = [i for i in range(1, number_of_cities + 1, 1)]
+        # assign, from 1 to number_of_cities, to iterable. İncrease by multiplying 2.
+        iterable = range(1, number_of_cities + 1, 2)
         for number_of_cities in progressBar(iterable, prefix = 'Simulating:', suffix = 'Complete', length = 50):
-            try :
-                data.append(execute(number_of_cities, 1, number_of_cities))
-            except :
-                print(f"** Error occured while generating test case {number_of_cities}. Program will skip this amount.")
+            
+            data.append(execute(number_of_cities, 1, number_of_cities))
+            
             if keyboard.is_pressed("ESC") and keyboard.is_pressed("C") and keyboard.is_pressed("L") and keyboard.is_pressed("S") :
                 print("** User stopped generating test cases. Program will now continue by results.")
                 break
@@ -140,6 +140,7 @@ def plot_data(data:list, will_plot_data:bool) -> None:
     Method, that takes the dict results of executions. And creates two plots about Dijkstra VS AStar. In case of aXb, where a is y axis, and b is x axis.
     First, it plots : time X number of cities.
     Second, it plots : iterations X number of cities.
+    Third, it plots : cost X iterations.
     After that, it saves the plots.
     @params :
         data                -   Required    :   The result of the simulation. (list)
@@ -156,7 +157,7 @@ def plot_data(data:list, will_plot_data:bool) -> None:
     plt.plot([i["number_of_cities"] for i in data], [i["DIJKSTRA"]["time"] for i in data], label="Dijkstra")
     plt.plot([i["number_of_cities"] for i in data], [i["ASTAR"]["time"] for i in data], label="AStar")
     plt.xlabel("Number of Cities")
-    plt.ylabel("Time (s)")
+    plt.ylabel("Time (us)")
     plt.title("Time X Number of Cities")
     plt.legend()
     plt.tight_layout()
@@ -173,6 +174,19 @@ def plot_data(data:list, will_plot_data:bool) -> None:
     plt.legend()
     plt.tight_layout()
     plt.savefig(SAVE_ITERATIONS_PLOT_PATH)
+    plt.close()
+
+    # costXiterations in log scale
+    plt.figure(figsize=(10, 10))
+    plt.plot([i["DIJKSTRA"]["cost"] for i in data], [max(i["DIJKSTRA"]["iterations"].values()) for i in data], label="Dijkstra")
+    plt.plot([i["ASTAR"]["cost"] for i in data], [max(i["ASTAR"]["iterations"].values()) for i in data], label="AStar")
+    plt.xlabel("Iterations")
+    plt.ylabel("Cost")
+    plt.title("Cost X Iterations")
+    plt.legend()
+    plt.yscale("log")
+    plt.tight_layout()
+    plt.savefig(SAVE_COST_PLOT_PATH)
     plt.close()
 
 

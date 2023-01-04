@@ -57,6 +57,9 @@ class MyGraph :
             for j in range(1, self.n+1):
                 if abs(i-j) <= 3 and i != j:
                     graph[i][j] = i + j
+
+        self.vertice_count = len(graph)
+        self.edge_count = sum([len(graph[i]) for i in graph])
         
         self.graph = graph
 
